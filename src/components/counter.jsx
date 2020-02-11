@@ -16,11 +16,17 @@ class Counter extends Component {
     this.setState({ count: this.state.count + 1 });
   }
 
+  handleSubtraction = () => {
+    this.state.count > 0 ?
+      this.setState({ count: this.state.count - 1 }) : this.countZero();
+  }
+
   render() {
     return (
       <React.Fragment>
         <span className={this.getClassBadge()}>{this.countZero()}</span>
-        <button onClick={this.handleAddition}>Add</button>
+        <button className='btn btn-success m-2' onClick={this.handleAddition}>Add</button>
+        <button className={this.getClassButtonRemove()} onClick={this.handleSubtraction}>Remove</button>
       </React.Fragment>
     );
   }
@@ -29,6 +35,12 @@ class Counter extends Component {
     let classBadge = "badge m-2 badge-";
     classBadge += this.state.count === 0 ? "warning" : "primary";
     return classBadge;
+  }
+
+  getClassButtonRemove() {
+    let classButton = "m-2 btn btn-danger "
+    classButton += this.state.count === 0 ? "disabled" : "active";
+    return classButton;
   }
 
   countZero() {
