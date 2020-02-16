@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { getBooks } from '../services/fakeBookService';
+import Counter from './counter'
 
 class Books extends Component {
   state = {
@@ -14,11 +15,11 @@ class Books extends Component {
   render() {
     const { length: count } = this.state.books;
     if (count === 0)
-      return <p>There are no movies in the database.</p>;
+      return <p>There are no books in the database.</p>;
 
     return (
       <React.Fragment>
-        <p>Showing {count} movies in the database.</p>
+        <p>Showing {count} books in the database.</p>
         <table className="table">
           <thead>
             <tr>
@@ -26,6 +27,7 @@ class Books extends Component {
               <th>Genre</th>
               <th>Stock</th>
               <th>Rate</th>
+              <th></th>
               <th></th>
             </tr>
           </thead>
@@ -37,6 +39,7 @@ class Books extends Component {
                 <td>{book.numberInStock}</td>
                 <td>{book.rating}</td>
                 <td><button onClick={() => this.handleDelete(book)} className="btn btn-danger btn-sm">Delete</button></td>
+                <td><Counter /></td>
               </tr>
             ))}
           </tbody>
