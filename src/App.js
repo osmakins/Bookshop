@@ -7,6 +7,7 @@ function App() {
   return (
     <React.Fragment>
       <NavBar />
+      <div className="jumbotron"></div>
       <main className="container">
         <Books />
       </main>
