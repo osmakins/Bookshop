@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { getBooks } from '../services/fakeBookService';
-import Counter from './counter'
+import Like from './common/like';
 
 class Books extends Component {
   state = {
@@ -11,6 +11,10 @@ class Books extends Component {
     const books = this.state.books.filter(b => b._id !== book._id);
     this.setState({ books });
   }
+
+  handleLiked = () => {
+    console.log("like clicked!");
+  };
 
   render() {
     const { length: count } = this.state.books;
@@ -29,6 +33,7 @@ class Books extends Component {
               <th>Rate</th>
               <th></th>
               <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -38,8 +43,8 @@ class Books extends Component {
                 <td>{book.genre.name}</td>
                 <td>{book.numberInStock}</td>
                 <td>{book.rating}</td>
+                <td><Like liked={book.liked} onToggleLike={this.handleLiked} /></td>
                 <td><button onClick={() => this.handleDelete(book)} className="btn btn-danger btn-sm">Delete</button></td>
-                <td><Counter /></td>
               </tr>
             ))}
           </tbody>

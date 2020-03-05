@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 
 class Like extends Component {
-  state = {}
+
   render() {
-    return (  );
+    let iclass = "fa fa-heart";
+    if (!this.props.liked) iclass += "-o";
+    return (<i className={iclass} aria-hidden="true" onClick={this.props.onToggleLike} style={{ cursor: "pointer" }}></i>);
   }
 }
 
