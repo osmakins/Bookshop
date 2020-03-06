@@ -12,8 +12,12 @@ class Books extends Component {
     this.setState({ books });
   }
 
-  handleLiked = () => {
-    console.log("like clicked!");
+  handleLiked = book => {
+    const books = [...this.state.books];
+    const index = books.indexOf(book);
+    books[index] = { ...books[index] };
+    books[index].liked = !books[index].liked;
+    this.setState({ books });
   };
 
   render() {
@@ -43,7 +47,7 @@ class Books extends Component {
                 <td>{book.genre.name}</td>
                 <td>{book.numberInStock}</td>
                 <td>{book.rating}</td>
-                <td><Like liked={book.liked} onToggleLike={this.handleLiked} /></td>
+                <td><Like liked={book.liked} onToggleLike={() => this.handleLiked(book)} /></td>
                 <td><button onClick={() => this.handleDelete(book)} className="btn btn-danger btn-sm">Delete</button></td>
               </tr>
             ))}
