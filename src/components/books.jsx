@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { getBooks } from '../services/fakeBookService';
 import Like from './common/like';
+import Pagination from './common/pagination';
 
 class Books extends Component {
   state = {
-    books: getBooks()
+    books: getBooks(),
+    currentPage: 1,
+    pageSize: 4
   };
 
   handleDelete = (book) => {
@@ -20,7 +23,12 @@ class Books extends Component {
     this.setState({ books });
   };
 
+  handlePageChange = page => {
+    this.setState({ currentPage: page })
+  }
+
   render() {
+    const { pageSize, currentPage } = this.state;
     const { length: count } = this.state.books;
     if (count === 0)
       return <p>There are no books in the database.</p>;
@@ -53,7 +61,12 @@ class Books extends Component {
             ))}
           </tbody>
         </table>
-      </React.Fragment>)
+        <Pagination itemsCount={count}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={this.handlePageChange} />
+      </React.Fragment>
+    );
   }
 }
 
