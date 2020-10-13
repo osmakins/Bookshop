@@ -3,13 +3,21 @@ import { getBooks } from '../services/fakeBookService';
 import Like from './common/like';
 import Pagination from './common/pagination';
 import { paginate } from '../utils/paginate';
+import SideBar from './common/sidebar';
+import { getGenres } from '../services/fakeGenreService';
+
 
 class Books extends Component {
   state = {
-    books: getBooks(),
+    books: [],
     currentPage: 1,
-    pageSize: 4
+    pageSize: 4,
+    genres: []
   };
+
+  componentDidMount() {
+    this.setState({ books: getBooks(), genres: getGenres() })
+  }
 
   handleDelete = (book) => {
     const books = this.state.books.filter(b => b._id !== book._id);
@@ -28,6 +36,10 @@ class Books extends Component {
     this.setState({ currentPage: page })
   }
 
+  handleGenreSelect = genre => {
+    console.log(genre)
+  };
+
   render() {
     const { pageSize, currentPage, books: allBooks } = this.state;
     const { length: count } = this.state.books;
@@ -37,38 +49,49 @@ class Books extends Component {
     const books = paginate(allBooks, currentPage, pageSize)
 
     return (
-      <React.Fragment>
-        <p>Showing {count} books in the database.</p>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Genre</th>
-              <th>Stock</th>
-              <th>Rate</th>
-              <th></th>
-              <th></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {books.map(book => (
-              <tr key={book._id}>
-                <td>{book.title}</td>
-                <td>{book.genre.name}</td>
-                <td>{book.numberInStock}</td>
-                <td>{book.rating}</td>
-                <td><Like liked={book.liked} onToggleLike={() => this.handleLiked(book)} /></td>
-                <td><button onClick={() => this.handleDelete(book)} className="btn btn-danger btn-sm">Delete</button></td>
+      <div className="row">
+        <div className="col-3">
+          <SideBar
+            textProperty="name"
+            valueProperty="_id"
+            items={this.state.genres}
+            onItemSelect={this.handleGenreSelect}
+          />
+        </div>
+        <div className="col">
+          <p>Showing {count} books in the database.</p>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Stock</th>
+                <th>Rate</th>
+                <th></th>
+                <th></th>
+                <th></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <Pagination itemsCount={count}
-          pageSize={pageSize}
-          currentPage={currentPage}
-          onPageChange={this.handlePageChange} />
-      </React.Fragment>
+            </thead>
+            <tbody>
+              {books.map(book => (
+                <tr key={book._id}>
+                  <td>{book.title}</td>
+                  <td>{book.genre.name}</td>
+                  <td>{book.numberInStock}</td>
+                  <td>{book.rating}</td>
+                  <td><Like liked={book.liked} onToggleLike={() => this.handleLiked(book)} /></td>
+                  <td><button onClick={() => this.handleDelete(book)} className="btn btn-danger btn-sm">Delete</button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <Pagination itemsCount={count}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            onPageChange={this.handlePageChange} />
+        </div>
+
+      </div>
     );
   }
 }
