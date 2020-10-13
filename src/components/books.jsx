@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { getBooks } from '../services/fakeBookService';
 import Like from './common/like';
 import Pagination from './common/pagination';
+import { paginate } from '../utils/paginate';
 
 class Books extends Component {
   state = {
@@ -28,10 +29,12 @@ class Books extends Component {
   }
 
   render() {
-    const { pageSize, currentPage } = this.state;
+    const { pageSize, currentPage, books: allBooks } = this.state;
     const { length: count } = this.state.books;
     if (count === 0)
       return <p>There are no books in the database.</p>;
+
+    const books = paginate(allBooks, currentPage, pageSize)
 
     return (
       <React.Fragment>
@@ -49,7 +52,7 @@ class Books extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.books.map(book => (
+            {books.map(book => (
               <tr key={book._id}>
                 <td>{book.title}</td>
                 <td>{book.genre.name}</td>
