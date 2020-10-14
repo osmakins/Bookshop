@@ -37,29 +37,30 @@ class Books extends Component {
   }
 
   handleGenreSelect = genre => {
-    console.log(genre)
+    this.setState({ selectedGenre: genre })
   };
 
   render() {
-    const { pageSize, currentPage, books: allBooks } = this.state;
+    const { pageSize, currentPage, selectedGenre, books: allBooks } = this.state;
     const { length: count } = this.state.books;
     if (count === 0)
       return <p>There are no books in the database.</p>;
 
-    const books = paginate(allBooks, currentPage, pageSize)
+    const filtered = selectedGenre ? allBooks.filter(m => m.genre._id === selectedGenre._id) : allBooks;
+
+    const books = paginate(filtered, currentPage, pageSize)
 
     return (
       <div className="row">
         <div className="col-3">
           <SideBar
-            textProperty="name"
-            valueProperty="_id"
             items={this.state.genres}
+            selectedItem={this.state.selectedGenre}
             onItemSelect={this.handleGenreSelect}
           />
         </div>
         <div className="col">
-          <p>Showing {count} books in the database.</p>
+          <p>Showing {filtered.length} books in the database.</p>
           <table className="table">
             <thead>
               <tr>
@@ -85,7 +86,7 @@ class Books extends Component {
               ))}
             </tbody>
           </table>
-          <Pagination itemsCount={count}
+          <Pagination itemsCount={filtered.length}
             pageSize={pageSize}
             currentPage={currentPage}
             onPageChange={this.handlePageChange} />
