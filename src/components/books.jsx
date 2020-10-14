@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { getBooks } from '../services/fakeBookService';
-import Like from './common/like';
+import BooksTable from './booksTable';
 import Pagination from './common/pagination';
 import { paginate } from '../utils/paginate';
 import SideBar from './common/sidebar';
 import { getGenres } from '../services/fakeGenreService';
+import _ from 'lodash';
 
 
 class Books extends Component {
@@ -12,11 +13,12 @@ class Books extends Component {
     books: [],
     currentPage: 1,
     pageSize: 4,
-    genres: []
+    genres: [],
+    sortColumn: { path: 'title', order: 'asc' }
   };
 
   componentDidMount() {
-    const genres = [{ name: 'All Genres' }, ...getGenres()]
+    const genres = [{ _id: '', name: 'All Genres' }, ...getGenres()]
     this.setState({ books: getBooks(), genres })
   }
 
@@ -41,15 +43,21 @@ class Books extends Component {
     this.setState({ selectedGenre: genre, currentPage: 1 })
   };
 
+  handleSort = sortColumn => {
+    this.setState({ sortColumn })
+  }
+
   render() {
-    const { pageSize, currentPage, selectedGenre, books: allBooks } = this.state;
+    const { pageSize, currentPage, selectedGenre, books: allBooks, sortColumn } = this.state;
     const { length: count } = this.state.books;
     if (count === 0)
       return <p>There are no books in the database.</p>;
 
     const filtered = selectedGenre && selectedGenre._id ? allBooks.filter(m => m.genre._id === selectedGenre._id) : allBooks;
 
-    const books = paginate(filtered, currentPage, pageSize)
+    const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+    const books = paginate(sorted, currentPage, pageSize)
 
     return (
       <div className="row">
@@ -62,37 +70,18 @@ class Books extends Component {
         </div>
         <div className="col">
           <p>Showing {filtered.length} books in the database.</p>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Genre</th>
-                <th>Stock</th>
-                <th>Rate</th>
-                <th></th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {books.map(book => (
-                <tr key={book._id}>
-                  <td>{book.title}</td>
-                  <td>{book.genre.name}</td>
-                  <td>{book.numberInStock}</td>
-                  <td>{book.rating}</td>
-                  <td><Like liked={book.liked} onToggleLike={() => this.handleLiked(book)} /></td>
-                  <td><button onClick={() => this.handleDelete(book)} className="btn btn-danger btn-sm">Delete</button></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <Pagination itemsCount={filtered.length}
+          <BooksTable
+            books={books}
+            sortColumn={sortColumn}
+            onLike={this.handleLiked}
+            onDelete={this.handleDelete}
+            onSort={this.handleSort} />
+          <Pagination
+            itemsCount={filtered.length}
             pageSize={pageSize}
             currentPage={currentPage}
             onPageChange={this.handlePageChange} />
         </div>
-
       </div>
     );
   }
