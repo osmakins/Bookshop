@@ -24,7 +24,7 @@ class BooksTable extends Component {
             <th onClick={() => this.raiseSort("title")}>Title</th>
             <th onClick={() => this.raiseSort("genre.name")}>Genre</th>
             <th onClick={() => this.raiseSort("numberInStock")}>Stock</th>
-            <th onClick={() => this.raiseSort("dailky")}>Rate</th>
+            <th onClick={() => this.raiseSort("rating")}>Rate</th>
             <th></th>
             <th></th>
             <th></th>
