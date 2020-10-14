@@ -16,7 +16,8 @@ class Books extends Component {
   };
 
   componentDidMount() {
-    this.setState({ books: getBooks(), genres: getGenres() })
+    const genres = [{ name: 'All Genres' }, ...getGenres()]
+    this.setState({ books: getBooks(), genres })
   }
 
   handleDelete = (book) => {
@@ -37,7 +38,7 @@ class Books extends Component {
   }
 
   handleGenreSelect = genre => {
-    this.setState({ selectedGenre: genre })
+    this.setState({ selectedGenre: genre, currentPage: 1 })
   };
 
   render() {
@@ -46,7 +47,7 @@ class Books extends Component {
     if (count === 0)
       return <p>There are no books in the database.</p>;
 
-    const filtered = selectedGenre ? allBooks.filter(m => m.genre._id === selectedGenre._id) : allBooks;
+    const filtered = selectedGenre && selectedGenre._id ? allBooks.filter(m => m.genre._id === selectedGenre._id) : allBooks;
 
     const books = paginate(filtered, currentPage, pageSize)
 
