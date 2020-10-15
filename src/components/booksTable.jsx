@@ -15,7 +15,7 @@ class BooksTable extends Component {
 
 
   render() {
-    const { books, onLike, onDelete, onSort, sortColumn } = this.props;
+    const { books, onSort, sortColumn } = this.props;
 
     return (
       <table className="table">

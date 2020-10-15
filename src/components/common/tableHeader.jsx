@@ -15,7 +15,7 @@ class TableHeader extends Component {
   };
 
   render() {
-    const { books, onDelete, onLike, columns } = this.props
+    const { columns } = this.props
     return (
       <thead>
         <tr>{columns.map(column => (
