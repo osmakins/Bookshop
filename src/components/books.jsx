@@ -47,17 +47,30 @@ class Books extends Component {
     this.setState({ sortColumn })
   }
 
-  render() {
-    const { pageSize, currentPage, selectedGenre, books: allBooks, sortColumn } = this.state;
-    const { length: count } = this.state.books;
-    if (count === 0)
-      return <p>There are no books in the database.</p>;
+  getPagedData = () => {
 
-    const filtered = selectedGenre && selectedGenre._id ? allBooks.filter(m => m.genre._id === selectedGenre._id) : allBooks;
+    const { pageSize, currentPage, selectedGenre, books: allBooks, sortColumn } = this.state;
+
+    const filtered = selectedGenre && selectedGenre._id
+
+      ? allBooks.filter(m => m.genre._id === selectedGenre._id)
+      : allBooks;
 
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
 
     const books = paginate(sorted, currentPage, pageSize)
+
+    return { totalCount: filtered.length, data: books }
+  }
+
+  render() {
+    const { pageSize, currentPage, sortColumn } = this.state;
+    const { length: count } = this.state.books;
+
+    if (count === 0)
+      return <p>There are no books in the database.</p>;
+
+    const { totalCount, data: books } = this.getPagedData();
 
     return (
       <div className="row">
@@ -69,7 +82,7 @@ class Books extends Component {
           />
         </div>
         <div className="col">
-          <p>Showing {filtered.length} books in the database.</p>
+          <p>Showing {totalCount} books in the database.</p>
           <BooksTable
             books={books}
             sortColumn={sortColumn}
@@ -77,7 +90,7 @@ class Books extends Component {
             onDelete={this.handleDelete}
             onSort={this.handleSort} />
           <Pagination
-            itemsCount={filtered.length}
+            itemsCount={totalCount}
             pageSize={pageSize}
             currentPage={currentPage}
             onPageChange={this.handlePageChange} />
