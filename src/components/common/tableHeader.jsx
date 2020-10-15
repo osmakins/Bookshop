@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 
 class TableHeader extends Component {
+
   raiseSort = path => {
     const sortColumn = { ...this.props.sortColumn };
     if (sortColumn.path === path) {
@@ -12,11 +13,12 @@ class TableHeader extends Component {
     }
     this.props.onSort(sortColumn);
   };
+
   render() {
-    const { movies, onDelete, onLike } = this.props
+    const { books, onDelete, onLike, columns } = this.props
     return (
       <thead>
-        <tr>{this.props.columns.map(column => (
+        <tr>{columns.map(column => (
           <th key={column.path || column.key} onClick={() => this.raiseSort(column.path)}>{column.label}</th>
         ))}
         </tr>

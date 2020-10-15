@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Like from './common/like';
+import TableBody from './common/tableBody';
 import TableHeader from './common/tableHeader';
 
 class BooksTable extends Component {
@@ -8,8 +9,8 @@ class BooksTable extends Component {
     { path: 'genre.name', label: 'Genre' },
     { path: 'numberInStock', label: 'Stock' },
     { path: 'rating', label: 'Rate' },
-    { key: 'like' },
-    { key: 'delete' },
+    { key: 'like', content: book => <Like liked={book.liked} onToggleLike={() => this.props.onLike(book)} /> },
+    { key: 'delete', content: book => <button onClick={() => this.props.onDelete(book)} className="btn btn-danger btn-sm">Delete</button> },
   ]
 
 
@@ -19,18 +20,7 @@ class BooksTable extends Component {
     return (
       <table className="table">
         <TableHeader columns={this.columns} sortColumn={sortColumn} onSort={onSort} />
-        <tbody>
-          {books.map(book => (
-            <tr key={book._id}>
-              <td>{book.title}</td>
-              <td>{book.genre.name}</td>
-              <td>{book.numberInStock}</td>
-              <td>{book.rating}</td>
-              <td><Like liked={book.liked} onToggleLike={() => onLike(book)} /></td>
-              <td><button onClick={() => onDelete(book)} className="btn btn-danger btn-sm">Delete</button></td>
-            </tr>
-          ))}
-        </tbody>
+        <TableBody data={books} columns={this.columns} />
       </table>
     );
   }
