@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Like from './common/like';
 import Table from './common/table'
 
 
 class BooksTable extends Component {
   columns = [
-    { path: 'title', label: 'Title' },
+    { path: 'title', label: 'Title', content: book => <Link to={`/books/${book._id}`}>{book.title}</Link> },
     { path: 'genre.name', label: 'Genre' },
     { path: 'numberInStock', label: 'Stock' },
     { path: 'rating', label: 'Rate' },
