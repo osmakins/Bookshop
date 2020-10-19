@@ -7,6 +7,7 @@ import Readers from './components/readers';
 import Borrowals from './components/borrowals';
 import NotFound from './components/notFound';
 import BookForm from './components/bookForm';
+import LoginForm from './components/loginForm';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
       <div className="jumbotron"></div>
       <main className="container">
         <Switch>
+          <Route path="/login" component={LoginForm} />
           <Route path="/books/:id" component={BookForm} />
           <Route path="/books" component={Books}></Route>
           <Route path="/readers" component={Readers}></Route>
