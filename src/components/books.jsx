@@ -6,6 +6,7 @@ import { paginate } from '../utils/paginate';
 import SideBar from './common/sidebar';
 import { getGenres } from '../services/fakeGenreService';
 import _ from 'lodash';
+import { Link } from 'react-router-dom';
 
 
 class Books extends Component {
@@ -82,6 +83,7 @@ class Books extends Component {
           />
         </div>
         <div className="col">
+          <Link className="btn btn-primary" to="/books/add">Add New</Link>
           <p>Showing {totalCount} books in the database.</p>
           <BooksTable
             books={books}

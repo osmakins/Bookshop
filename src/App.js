@@ -9,6 +9,7 @@ import NotFound from './components/notFound';
 import BookForm from './components/bookForm';
 import LoginForm from './components/loginForm';
 import RegisterForm from './components/registerForm';
+import AddForm from './components/addForm';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
       <div className="jumbotron"></div>
       <main className="container">
         <Switch>
+          <Route path="/books/add" component={AddForm} />
           <Route path="/register" component={RegisterForm} />
           <Route path="/login" component={LoginForm} />
           <Route path="/books/:id" component={BookForm} />
