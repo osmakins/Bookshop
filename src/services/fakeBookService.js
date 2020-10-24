@@ -78,13 +78,13 @@ export function getBook(id) {
 
 export function saveBook(book) {
   let bookInDb = books.find(m => m._id === book._id) || {};
-  bookInDb.name = book.name;
+  bookInDb.title = book.title;
   bookInDb.genre = genresAPI.genres.find(g => g._id === book.genreId);
   bookInDb.numberInStock = book.numberInStock;
   bookInDb.rating = book.rating;
 
   if (!bookInDb._id) {
-    bookInDb._id = Date.now();
+    bookInDb._id = Date.now().toString();
     books.push(bookInDb);
   }
 
