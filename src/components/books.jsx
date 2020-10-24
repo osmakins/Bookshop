@@ -7,6 +7,7 @@ import SideBar from './common/sidebar';
 import { getGenres } from '../services/fakeGenreService';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
+import Search from './search';
 
 
 class Books extends Component {
@@ -15,6 +16,8 @@ class Books extends Component {
     currentPage: 1,
     pageSize: 4,
     genres: [],
+    searchItem: "",
+    selectedGenre: null,
     sortColumn: { path: 'title', order: 'asc' }
   };
 
@@ -41,8 +44,12 @@ class Books extends Component {
   }
 
   handleGenreSelect = genre => {
-    this.setState({ selectedGenre: genre, currentPage: 1 })
+    this.setState({ selectedGenre: genre, searchItem: "", currentPage: 1 })
   };
+
+  handleSearch = query => {
+    this.setState({ searchItem: query, selectedGenre: null, currentPage: 1 })
+  }
 
   handleSort = sortColumn => {
     this.setState({ sortColumn })
@@ -50,12 +57,18 @@ class Books extends Component {
 
   getPagedData = () => {
 
-    const { pageSize, currentPage, selectedGenre, books: allBooks, sortColumn } = this.state;
+    const { pageSize, currentPage, selectedGenre, books: allBooks, sortColumn, searchItem } = this.state;
 
-    const filtered = selectedGenre && selectedGenre._id
+    let filtered = allBooks;
+    if (searchItem)
+      filtered = allBooks.filter(m =>
+        m.title.toLowerCase().startsWith(searchItem.toLowerCase())
+      );
 
-      ? allBooks.filter(m => m.genre._id === selectedGenre._id)
-      : allBooks;
+    else if (selectedGenre && selectedGenre._id)
+      filtered = allBooks.filter(m => m.genre._id === selectedGenre._id);
+
+
 
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
 
@@ -65,7 +78,7 @@ class Books extends Component {
   }
 
   render() {
-    const { pageSize, currentPage, sortColumn } = this.state;
+    const { pageSize, currentPage, sortColumn, searchItem } = this.state;
     const { length: count } = this.state.books;
 
     if (count === 0)
@@ -85,6 +98,7 @@ class Books extends Component {
         <div className="col">
           <Link className="btn btn-primary" to="/books/add">Add New</Link>
           <p>Showing {totalCount} books in the database.</p>
+          <Search value={searchItem} onChange={this.handleSearch} />
           <BooksTable
             books={books}
             sortColumn={sortColumn}
