@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { getBooks } from '../services/fakeBookService';
+import { toast } from 'react-toastify';
+import { deleteBook, getBooks } from '../services/bookService';
 import BooksTable from './booksTable';
 import Pagination from './common/pagination';
 import { paginate } from '../utils/paginate';
 import SideBar from './common/sidebar';
-import { getGenres } from '../services/fakeGenreService';
+import { getGenres } from '../services/genreService';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import Search from './search';
@@ -21,14 +22,27 @@ class Books extends Component {
     sortColumn: { path: 'title', order: 'asc' }
   };
 
-  componentDidMount() {
-    const genres = [{ _id: '', name: 'All Genres' }, ...getGenres()]
-    this.setState({ books: getBooks(), genres })
+  async componentDidMount() {
+    const { data } = await getGenres();
+    const genres = [{ _id: '', name: 'All Genres' }, ...data];
+
+    const { data: books } = await getBooks()
+
+    this.setState({ books, genres })
   }
 
   handleDelete = (book) => {
+    const originalBooks = this.state.books;
     const books = this.state.books.filter(b => b._id !== book._id);
     this.setState({ books });
+    try {
+      deleteBook(book._id);
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        toast.error('This movie has already been deleted');
+      this.setState({ books: originalBooks })
+    }
+
   }
 
   handleLiked = book => {

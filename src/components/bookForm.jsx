@@ -1,7 +1,7 @@
 import Joi from 'joi-browser';
 import React from 'react';
-import { getBook, saveBook } from '../services/fakeBookService';
-import { getGenres } from '../services/fakeGenreService';
+import { getBook, saveBook } from '../services/bookService';
+import { getGenres } from '../services/genreService';
 import Form from './common/form';
 
 class BookForm extends Form {
@@ -26,17 +26,20 @@ class BookForm extends Form {
     rating: Joi.number().required().min(0).max(10).label("Rate")
   }
 
-  componentDidMount() {
-    const genres = getGenres();
+  async componentDidMount() {
+    const { data: genres } = await getGenres();
     this.setState({ genres });
 
     const bookId = this.props.match.params.id;
     if (bookId === "add") return;
 
-    const book = getBook(bookId);
-    if (!book) return this.props.history.replace("/not-found");
-
-    this.setState({ data: this.mapToViewModel(book) })
+    try {
+      const { data: book } = await getBook(bookId);
+      this.setState({ data: this.mapToViewModel(book) })
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        this.props.history.replace("/not-found");
+    }
   }
 
   mapToViewModel(book) {
@@ -65,7 +68,7 @@ class BookForm extends Form {
           {this.renderSelect("genreId", "Genre", genres)}
           {this.renderInput("numberInStock", "Number in Stock", "number")}
           {this.renderInput("rating", "Rate")}
-          {this.renderButton("Save")}
+          {this.renderButton("Save", "primary")}
         </form>
       </div>
     );
