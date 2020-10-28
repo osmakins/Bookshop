@@ -26,20 +26,28 @@ class BookForm extends Form {
     rating: Joi.number().required().min(0).max(10).label("Rate")
   }
 
-  async componentDidMount() {
+  async populateGenres() {
     const { data: genres } = await getGenres();
     this.setState({ genres });
+  }
 
-    const bookId = this.props.match.params.id;
-    if (bookId === "add") return;
+  async populateBook() {
+
 
     try {
+      const bookId = this.props.match.params.id;
+      if (bookId === "add") return;
       const { data: book } = await getBook(bookId);
       this.setState({ data: this.mapToViewModel(book) })
     } catch (ex) {
       if (ex.response && ex.response.status === 404)
         this.props.history.replace("/not-found");
     }
+  }
+
+  async componentDidMount() {
+    await this.populateGenres();
+    await this.populateBook();
   }
 
   mapToViewModel(book) {
