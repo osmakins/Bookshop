@@ -32,8 +32,6 @@ class BookForm extends Form {
   }
 
   async populateBook() {
-
-
     try {
       const bookId = this.props.match.params.id;
       if (bookId === "add") return;
@@ -60,8 +58,8 @@ class BookForm extends Form {
     }
   }
 
-  doSubmit = () => {
-    saveBook(this.state.data);
+  doSubmit = async () => {
+    await saveBook(this.state.data);
 
     this.props.history.push("/books");
   }
