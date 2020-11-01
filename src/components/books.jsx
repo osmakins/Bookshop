@@ -94,6 +94,7 @@ class Books extends Component {
   render() {
     const { pageSize, currentPage, sortColumn, searchItem } = this.state;
     const { length: count } = this.state.books;
+    const { user } = this.props
 
     if (count === 0)
       return <p>There are no books in the database.</p>;
@@ -110,7 +111,7 @@ class Books extends Component {
           />
         </div>
         <div className="col">
-          <Link className="btn btn-primary" to="/books/add">Add New</Link>
+          {user && <Link className="btn btn-primary" to="/books/add">Add New</Link>}
           <p>Showing {totalCount} books in the database.</p>
           <Search value={searchItem} onChange={this.handleSearch} />
           <BooksTable

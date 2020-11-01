@@ -36,7 +36,7 @@ class App extends Component {
             <Route path="/login" component={LoginForm} />
             <Route path="/logout" component={Logout} />
             <Route path="/books/:id" component={BookForm} />
-            <Route path="/books" component={Books}></Route>
+            <Route path="/books" render={props => <Books {...props} user={this.state.user} />}></Route>
             <Route path="/readers" component={Readers}></Route>
             <Route path="/borrowals" component={Borrowals}></Route>
             <Route path="/not-found" component={NotFound}></Route>
