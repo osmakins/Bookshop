@@ -18,8 +18,14 @@ export function loginWithJwt(jwt) {
   localStorage.setItem(tokenKey, jwt)
 }
 
+http.setJwt(getJwt());
+
 export function getJwt() {
-  return localStorage.getItem(tokenKey)
+  try {
+    return localStorage.getItem(tokenKey)
+  } catch (ex) {
+    return null
+  }
 }
 
 export function getCurrentUser() {
