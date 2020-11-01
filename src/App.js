@@ -9,10 +9,12 @@ import NotFound from './components/notFound';
 import BookForm from './components/bookForm';
 import LoginForm from './components/loginForm';
 import RegisterForm from './components/registerForm';
+import ProtectedRoute from './components/common/protectedRoute';
 import Logout from './components/logout';
 import auth from './services/authService'
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
+
 
 
 class App extends Component {
@@ -36,7 +38,7 @@ class App extends Component {
             <Route path="/register" component={RegisterForm} />
             <Route path="/login" component={LoginForm} />
             <Route path="/logout" component={Logout} />
-            <Route path="/books/:id" render={props => { if (!user) return <Redirect to="/login" />; return <BookForm {...props} /> }} />
+            <ProtectedRoute path="/books/:id" component={BookForm} />
             <Route path="/books" render={props => <Books {...props} user={this.state.user} />}></Route>
             <Route path="/readers" component={Readers}></Route>
             <Route path="/borrowals" component={Borrowals}></Route>
